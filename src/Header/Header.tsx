@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 const Header = ({ Setmodal }) => {
   const phones = useSelector((state) => state.shop.phones);
   const [search, SetSearch] = useState('');
-  const [searchModal, SetSearchModal] = useState(false);
+  const [searchModal, SetSearchModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const filter = phones.filter((phones) => {
     return search !== ''
