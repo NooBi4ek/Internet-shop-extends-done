@@ -1,29 +1,23 @@
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Upper_Header_input } from './styled/styled-header/SHeader';
-import store from './store/redux';
+import { render, screen } from '@testing-library/react';
+import App from './App.tsx';
 import { Provider } from 'react-redux';
-import { Main_phone } from './Main/Main_phone.tsx';
-describe('internet-shop-render', () => {
-  it('Render Header Component', () => {
-    const SetSearch = jest.fn();
-    const { container } = render(
-      <Upper_Header_input
-        type="checkbox"
-        onChange={(e) => SetSearch(e.target.value)}
-      />,
-    );
-    const check = container.firstChild;
-    expect(check).not.toBeChecked();
-    userEvent.click(check);
-    expect(check).toBeChecked();
-  });
-  it('Render Main Phone component', () => {
-    const wrapper = (
-      <Provider store={store}>
-        <Main_phone />
+import store from './store/redux';
+import userEvent from '@testing-library/user-event';
+describe('renders learn react link', () => {
+  it('Render App component', () => {
+    const wrapper = () => (
+      <Provider reduxStore={store}>
+        <App />
       </Provider>
     );
-    const btn = wrapper.firstChild;
+    screen.debug();
+  });
+  it('Render Header component', () => {
+    const onClick = jest.fn();
+    render(<button onClick={onClick}>Buy</button>);
+    screen.debug();
+    expect(onClick).toBeCalledTimes(0);
+    userEvent.dblClick(screen.getByRole('button'));
+    expect(onClick).toBeCalledTimes(2);
   });
 });
