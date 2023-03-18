@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { IPhones } from '../models/models';
-import {
-  addToVersus,
-  addToOrder,
-  ItemToVersus,
-} from '../store/internet_shop_slice.ts';
+import { addToVersus, addToOrder } from '../store/internet_shop_slice.ts';
 import {
   ButtonPhone,
   ImgPhone,
@@ -15,7 +11,10 @@ import {
   Phone_Char,
   Wrapper,
 } from '../styled/styled-onePhone/SOnePhone';
-const OnePhone = ({ phones }) => {
+interface OnePhone {
+  phones: IPhones;
+}
+const OnePhone: React.FC<OnePhone> = ({ phones }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
   return (

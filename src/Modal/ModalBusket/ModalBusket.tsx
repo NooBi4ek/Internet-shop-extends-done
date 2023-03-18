@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { IPhones } from '../../models/modelPhone';
 import { addcount, deleteOrder } from '../../store/internet_shop_slice.ts';
 import {
   Basket_button,
@@ -7,10 +8,12 @@ import {
   Basket_img,
   Basket_wrapper,
 } from '../../styled/styled-busket/SBusket';
-
-const ModalBusket = ({ orders, id }) => {
+interface ModalBusket {
+  orders: IPhones;
+  id: number;
+}
+const ModalBusket: React.FC<ModalBusket> = ({ orders, id }) => {
   const dispatch = useDispatch();
-  const phones = useSelector((state) => state.shop.phones);
   return (
     <Basket_wrapper>
       <Basket_img src={'./img/' + orders.img} />

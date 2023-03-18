@@ -1,4 +1,5 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
+import { ModalWindow } from '../styled-dublicate/SDubl';
 export const UpperHeader_Wrapper = styled.div`
   display: flex;
   justify-content: space-around;
@@ -61,24 +62,14 @@ export const Upper_Header_input = styled.input`
   color: #fff;
   border: 1px solid #524336;
   padding: 5px 0;
-  position: ${(props) => (props.searchModal ? "fixed" : "absolute")};
+  position: ${(props) => (props.searchModal ? 'fixed' : 'absolute')};
   margin-left: 2vw;
 `;
 export const Upper_Header_button = styled.button``;
 
-export const SearchWrapper = styled.div`
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(0, 0, 0, 0.4);
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: ${(props) => (props.searchModal ? "1" : "0")};
-  pointer-events: ${(props) => (props.searchModal ? "all" : "none")};
-  transition: 0.5s;
+export const SearchWrapper = styled(ModalWindow)`
+  opacity: ${(props) => (props.searchModal ? '1' : '0')};
+  pointer-events: ${(props) => (props.searchModal ? 'all' : 'none')};
 `;
 
 export const WrapperResult = styled.div`

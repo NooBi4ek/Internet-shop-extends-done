@@ -3,13 +3,17 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckOut,
-  Modal,
   Modalcontent,
+  ModalWrapper,
   Modal_div,
   Sum,
 } from '../styled/styled-modal/SModal';
 import ModalBusket from './ModalBusket/ModalBusket.tsx';
-const Modalbusket = ({ modal, Setmodal }) => {
+interface IModalWindow {
+  modal: boolean;
+  Setmodal(): boolean;
+}
+const ModalWindow: React.FC<IModalWindow> = ({ modal, Setmodal }) => {
   const orders = useSelector((state) => state.shop.orders);
   const navigate = useNavigate();
   let sum = 0;
@@ -17,7 +21,7 @@ const Modalbusket = ({ modal, Setmodal }) => {
     sum += el.count * el.price;
   });
   return (
-    <Modal modal={modal} onClick={() => Setmodal(false)}>
+    <ModalWrapper modal={modal} onClick={() => Setmodal(false)}>
       <Modalcontent onClick={(e) => e.stopPropagation()}>
         {orders.length > 0 ? (
           <div>
@@ -38,7 +42,7 @@ const Modalbusket = ({ modal, Setmodal }) => {
           <Modal_div>This busket is empty</Modal_div>
         )}
       </Modalcontent>
-    </Modal>
+    </ModalWrapper>
   );
 };
-export default Modalbusket;
+export default ModalWindow;

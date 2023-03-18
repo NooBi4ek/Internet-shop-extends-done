@@ -12,9 +12,9 @@ import {
   Main_phone_wrapper,
 } from '../styled/styled-mainphone/SMainphone';
 import '../styled/styled-mainphone/SMainphone.css';
-import { IPhones } from '../models/models';
+import { IPhones } from '../models/modelPhone';
 import { useNavigate } from 'react-router-dom';
-const Main_phone = () => {
+const Main_phone: React.FC = () => {
   const dispatch = useDispatch();
   const filterphone = useSelector((state) => state.shop.filter_phone);
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ const Main_phone = () => {
   }, []);
   return (
     <Main_phone_wrapper>
+      {console.log('render main_phone')}
       {filterphone.map((phone: IPhones) => (
         <Main_onephone_block key={phone.id}>
           <Main_onephone_img
@@ -40,6 +41,7 @@ const Main_phone = () => {
               dispatch(addToOrder({ phone }));
               dispatch(afterAddOrder({ phone }));
             }}
+            title="Buy"
           >
             {phone.click ? 'In the box' : 'Buy'}
           </Button_buy>

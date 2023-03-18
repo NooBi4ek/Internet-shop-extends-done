@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IPhones } from '../models/models';
 
-const shopSlice: IPhones = createSlice({
+interface IAction<T> {
+  type: string;
+  payload: T;
+}
+
+const shopSlice = createSlice({
   name: 'shop',
   initialState: {
     phones: [
@@ -208,33 +212,44 @@ const shopSlice: IPhones = createSlice({
     orders: [],
     filter_phone: [],
     versus_Phone: [],
+    filterSearch: [],
     sum: 0,
+    maxPrice: 0,
+    maxThreads: 0,
   },
   reducers: {
-    filterCategories(state, action) {
+    //Глянуть filterCategories и придумать что-то с Action
+    filterCategories(state, action): void {
       state.filter_phone = [];
       if (action.payload.el.namecat === 'All') {
-        state.phones.map((el) => state.filter_phone.push(el));
+        state.phones.forEach((el) => state.filter_phone.push(el));
         state.All_category = true;
       } else {
         state.phones.filter((phones) => {
-          return (
-            phones.company === action.payload.el.namecat &&
-            state.filter_phone.push(phones)
-          );
+          phones.company === action.payload.el.namecat &&
+            state.filter_phone.push(phones);
         });
         state.All_category = false;
       }
     },
-    startPhone(state) {
+    filterSearchPhone(state, action: IAction<{ search: string }>) {
+      state.filterSearch = [];
+      const { search } = action.payload;
+      state.phones.filter((phones) => {
+        if (
+          search !== '' &&
+          phones.name.toLowerCase().startsWith(search.toLowerCase())
+        ) {
+          state.filterSearch.push(phones);
+        }
+      });
+    },
+    startPhone(state): void {
       state.filter_phone = [];
-      state.phones.map((el) => state.filter_phone.push(el));
+      state.phones.forEach((el) => state.filter_phone.push(el));
       state.All_category = true;
     },
-    Countsum(state) {
-      state.orders.forEach((el) => (state.sum += el.count * el.price));
-    },
-    addToOrder(state, action) {
+    addToOrder(state, action): void {
       let isArr = false;
       state.orders.forEach((el) => {
         if (el.id === action.payload.phone.id) {
@@ -252,8 +267,8 @@ const shopSlice: IPhones = createSlice({
         );
       }
     },
-    afterAddOrder(state, action) {
-      if (state.All_category !== true) {
+    afterAddOrder(state, action): void {
+      if (!state.All_category) {
         state.filter_phone = [];
         state.phones.forEach((el) =>
           el.company === action.payload.phone.company
@@ -265,7 +280,7 @@ const shopSlice: IPhones = createSlice({
         state.phones.forEach((el) => state.filter_phone.push(el));
       }
     },
-    deleteOrder(state, action) {
+    deleteOrder(state, action): void {
       if (action.payload.orders.count > 1) {
         state.orders = state.orders.map((el) =>
           el.id === action.payload.orders.id
@@ -294,7 +309,7 @@ const shopSlice: IPhones = createSlice({
         );
       }
     },
-    addToVersus(state, action) {
+    addToVersus(state, action): void {
       let isArr = false;
       state.versus_Phone.forEach((el) => {
         if (el.id === action.payload.id) {
@@ -308,9 +323,10 @@ const shopSlice: IPhones = createSlice({
             ? { ...el, click_versus: (el.click_versus = true) }
             : el,
         );
+        console.log(state.versus_Phone);
       }
     },
-    DeleteInVersus(state, action) {
+    DeleteInVersus(state, action): void {
       state.versus_Phone = state.versus_Phone.filter(
         (el) => el.id !== action.payload.phone.id,
       );
@@ -325,6 +341,22 @@ const shopSlice: IPhones = createSlice({
         el.id === action.payload.id ? { ...el, count: el.count + 1 } : el,
       );
     },
+    versusMaxPrice(state) {
+      state.versus_Phone.length > 0 &&
+        state.versus_Phone.reduce((acc, curr) => {
+          if (acc.price > curr.price) {
+            return (state.maxPrice = acc);
+          } else return (state.maxPrice = curr);
+        });
+    },
+    versusMaxThreads(state) {
+      state.versus_Phone.length > 0 &&
+        state.versus_Phone.reduce((acc, curr) => {
+          if (acc.quantity_threads > curr.quantity_threads) {
+            return (state.maxThreads = acc);
+          } else return (state.maxThreads = curr);
+        });
+    },
   },
 });
 export const {
@@ -333,9 +365,11 @@ export const {
   addToVersus,
   DeleteInVersus,
   deleteOrder,
-  Countsum,
   filterCategories,
   startPhone,
   afterAddOrder,
+  filterSearchPhone,
+  versusMaxPrice,
+  versusMaxThreads,
 } = shopSlice.actions;
 export default shopSlice.reducer;

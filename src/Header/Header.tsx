@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Modalcontent } from '../styled/styled-modal/SModal';
 import '../styled/styled-header/SHeader.css';
@@ -10,16 +10,20 @@ import {
   WrapperResult,
 } from '../styled/styled-header/SHeader';
 import { useNavigate } from 'react-router-dom';
-const Header = ({ Setmodal }) => {
-  const phones = useSelector((state) => state.shop.phones);
+import { filterSearchPhone } from '../store/internet_shop_slice.ts';
+interface Header {
+  Setmodal: boolean;
+}
+
+const Header: React.FC<Header> = ({ Setmodal }) => {
+  const filter = useSelector((state) => state.shop.filterSearch);
+  const dispatch = useDispatch();
   const [search, SetSearch] = useState('');
+  useEffect(() => {
+    dispatch(filterSearchPhone({ search }));
+  }, [search]);
   const [searchModal, SetSearchModal] = useState<boolean>(false);
   const navigate = useNavigate();
-  const filter = phones.filter((phones) => {
-    return search !== ''
-      ? phones.name.toLowerCase().startsWith(search.toLowerCase())
-      : null;
-  });
   return (
     <header className="wrapper">
       <div>mail@gmail.com</div>
@@ -31,7 +35,10 @@ const Header = ({ Setmodal }) => {
           searchModal={searchModal}
           onClick={() => SetSearchModal(false)}
         >
-          <Modalcontent onClick={(e) => e.stopPropagation()}>
+          <Modalcontent
+            title="Modal content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <WrapperResult>
               {filter.map((phone) => (
                 <Searching_phone
@@ -52,7 +59,9 @@ const Header = ({ Setmodal }) => {
           placeholder="please,seach..."
           value={search}
           searchModal={searchModal}
-          onChange={(e) => SetSearch(e.target.value)}
+          onChange={(e) => {
+            SetSearch(e.target.value);
+          }}
           onClick={() => SetSearchModal(true)}
         />
       </div>

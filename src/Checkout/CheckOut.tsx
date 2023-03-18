@@ -1,10 +1,8 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { IPhones } from '../models/models';
-import { deleteOrder } from '../store/internet_shop_slice.ts';
 import {
   Box,
-  Button,
   DivOrder,
   FormBox,
   Img,
@@ -12,10 +10,8 @@ import {
   OrderWrapper,
   Sum,
 } from '../styled/styled-checkout/SCheckOut';
-const CheckOut = () => {
+const CheckOut: React.FC = () => {
   const orders = useSelector((state) => state.shop.orders);
-  const phones = useSelector((state) => state.shop.phones);
-  const dispatch = useDispatch();
   let sum = 0;
   orders.forEach((el) => {
     sum += el.count * el.price;

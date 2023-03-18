@@ -29,6 +29,7 @@ Object {
           </div>
           <button
             class="sc-hLBbgP hXuYbx"
+            title="Buy"
           >
             Buy
           </button>
@@ -54,6 +55,7 @@ Object {
           </div>
           <button
             class="sc-hLBbgP hXuYbx"
+            title="Buy"
           >
             Buy
           </button>
@@ -86,6 +88,7 @@ Object {
         </div>
         <button
           class="sc-hLBbgP hXuYbx"
+          title="Buy"
         >
           Buy
         </button>
@@ -111,6 +114,7 @@ Object {
         </div>
         <button
           class="sc-hLBbgP hXuYbx"
+          title="Buy"
         >
           Buy
         </button>

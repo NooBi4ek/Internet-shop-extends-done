@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '../styled-dublicate/SDubl';
 
 export const Main_phone_wrapper = styled.div``;
 
@@ -29,18 +30,10 @@ export const Main_onephone_img = styled.img`
   max-height: 200px;
 `;
 
-export const Button_buy = styled.button`
-  background-color: #000;
-  color: #fff;
+export const Button_buy = styled(Button)`
   padding: 5px 30px;
-  border-radius: 7px;
-  font-weight: 600;
   border: 1px solid ${(props) => (props.click ? 'red' : 'black')};
   margin: 15px 0 20px 0;
-  font-size: 18px;
-  font-style: italic;
-  border: none;
-  transition: 0.5s ease-in-out;
   &:hover {
     color: gold;
   }

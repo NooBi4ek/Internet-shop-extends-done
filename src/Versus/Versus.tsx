@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IPhones } from '../models/models';
-import { DeleteInVersus } from '../store/internet_shop_slice.ts';
+import {
+  DeleteInVersus,
+  versusMaxPrice,
+  versusMaxThreads,
+} from '../store/internet_shop_slice.ts';
 import { ButtonPhone } from '../styled/styled-onePhone/SOnePhone';
 import {
   Fill,
@@ -12,26 +16,18 @@ import {
   Threads,
   Wrapper,
 } from '../styled/styled-versus/SVersus';
-const Versus = () => {
-  const versus = useSelector((state) => state.shop.versus_Phone);
-  let max_price =
-    versus.length > 0 &&
-    versus.reduce((acc, curr) => {
-      if (acc.price > curr.price) {
-        return acc;
-      } else return curr;
-    });
-  let max_threads =
-    versus.length > 0 &&
-    versus.reduce((acc, curr) => {
-      if (acc.quantity_threads > curr.quantity_threads) {
-        return acc;
-      } else return curr;
-    });
+const Versus: React.FC = () => {
   const dispatch = useDispatch();
+  const versus = useSelector((state) => state.shop.versus_Phone);
+  useEffect(() => {
+    dispatch(versusMaxPrice());
+    dispatch(versusMaxThreads());
+  }, [versus]);
+  const max_price = useSelector((state) => state.shop.maxPrice);
+  const max_threads = useSelector((state) => state.shop.maxThreads);
+
   return (
     <div>
-      {console.log(max_price)}
       {versus.length > 0 ? (
         versus.map((phone: IPhones) => (
           <Wrapper key={phone.id}>

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '../styled-dublicate/SDubl';
 
 export const ImgPhone = styled.img`
   max-width: 100vw;
@@ -22,18 +23,10 @@ export const PhonePrice = styled.div`
   letter-spacing: 0.1em;
 `;
 
-export const ButtonPhone = styled.button`
-  background-color: #000;
-  color: #fff;
+export const ButtonPhone = styled(Button)`
   padding: 10px 60px;
-  border-radius: 7px;
-  font-weight: 600;
   border: 1px solid ${(props) => (props.click ? 'red' : 'black')};
   margin: 5vh 1vw;
-  font-size: 18px;
-  font-style: italic;
-  border: none;
-  transition: 0.5s ease-in-out;
   &:hover {
     transform: translateY(-0.05in);
     box-shadow: 6px 3px 3px #a5a5a5;
