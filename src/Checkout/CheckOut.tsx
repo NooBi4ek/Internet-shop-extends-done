@@ -1,49 +1,36 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../store/hooks.ts';
 import { IPhones } from '../models/models';
-import {
-  Box,
-  DivOrder,
-  FormBox,
-  Img,
-  Label,
-  OrderWrapper,
-  Sum,
-} from '../styled/styled-checkout/SCheckOut';
+import { countSum } from '../store/internet_shop_slice.ts';
+import * as Checkout from '../styled/styled-checkout/SCheckOut';
+const CheckOut_Buy_Form = React.lazy(() => import('./CheckOut_Buy_Form.tsx'));
 const CheckOut: React.FC = () => {
-  const orders = useSelector((state) => state.shop.orders);
-  let sum = 0;
-  orders.forEach((el) => {
-    sum += el.count * el.price;
-  });
+  const orders = useAppSelector((state) => state.shop.orders);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(countSum());
+  }, [orders]);
   return (
     <div>
-      <OrderWrapper>
-        {orders.map((order: IPhones) => (
-          <Box>
-            <Img src={'./img/' + order.img} />
-            <DivOrder>{order.name}</DivOrder>
-            <DivOrder>{order.price * order.count} UAH</DivOrder>
-            <DivOrder>Quanitity device: {order.count}</DivOrder>
-          </Box>
-        ))}
-      </OrderWrapper>
-      <FormBox>
-        <Sum>Total sum: {sum} UAH</Sum>
-        <Label>
-          Name: <input />
-        </Label>
-        <Label>
-          Surname: <input />
-        </Label>
-        <Label>
-          E-mail: <input />
-        </Label>
-        <Label>
-          Number Phone: <input />
-        </Label>
-        <button>Submit checkout</button>
-      </FormBox>
+      <Checkout.OrderWrapper>
+        {orders.length > 0 ? (
+          orders.map((order: IPhones) => (
+            <Checkout.Box>
+              <Checkout.Img src={'./img/' + order.img} />
+              <Checkout.DivOrder>{order.name}</Checkout.DivOrder>
+              <Checkout.DivOrder>
+                {order.price * order.count} UAH
+              </Checkout.DivOrder>
+              <Checkout.DivOrder>
+                Quanitity device: {order.count}
+              </Checkout.DivOrder>
+            </Checkout.Box>
+          ))
+        ) : (
+          <h2>Checkout is fill</h2>
+        )}
+      </Checkout.OrderWrapper>
+      <CheckOut_Buy_Form fallback={<div>Loading form...</div>} />
     </div>
   );
 };

@@ -1,53 +1,51 @@
-import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect } from 'react';
-import {
-  addToOrder,
-  startPhone,
-  afterAddOrder,
-} from '../store/internet_shop_slice.ts';
-import {
-  Button_buy,
-  Main_onephone_block,
-  Main_onephone_img,
-  Main_phone_wrapper,
-} from '../styled/styled-mainphone/SMainphone';
-import '../styled/styled-mainphone/SMainphone.css';
-import { IPhones } from '../models/modelPhone';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-const Main_phone: React.FC = () => {
-  const dispatch = useDispatch();
-  const filterphone = useSelector((state) => state.shop.filter_phone);
+import { useAppDispatch } from '../store/hooks.ts';
+import * as Mainphone from '../styled/styled-mainphone/SMainphone';
+import { addToOrder, afterAddOrder } from '../store/internet_shop_slice.ts';
+interface MainPhone {
+  id: number;
+  name: string;
+  price: string | number;
+  img: string;
+  click: boolean;
+  company: string;
+}
+
+const Main_phone: React.FC<MainPhone> = ({
+  id,
+  name,
+  img,
+  price,
+  click,
+  company,
+}) => {
   const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(startPhone());
-  }, []);
+  const dispatch = useAppDispatch();
   return (
-    <Main_phone_wrapper>
-      {console.log('render main_phone')}
-      {filterphone.map((phone: IPhones) => (
-        <Main_onephone_block key={phone.id}>
-          <Main_onephone_img
-            src={'./img/' + phone.img}
-            alt={phone.name}
-            onClick={() => {
-              navigate(`${phone.id}`);
-            }}
-          />
-          <div className="phoneName">{phone.name}</div>
-          <div className="phoneName">{phone.price} UAH</div>
-          <Button_buy
-            key={phone.id}
-            onClick={() => {
-              dispatch(addToOrder({ phone }));
-              dispatch(afterAddOrder({ phone }));
-            }}
-            title="Buy"
-          >
-            {phone.click ? 'In the box' : 'Buy'}
-          </Button_buy>
-        </Main_onephone_block>
-      ))}
-    </Main_phone_wrapper>
+    <>
+      <Mainphone.Main_onephone_block>
+        <Mainphone.Main_onephone_img
+          src={'./img/' + img}
+          alt={name}
+          onClick={() => {
+            navigate(`${id}`);
+          }}
+        />
+        <div className="phoneName">{name}</div>
+        <div className="phoneName">{price} UAH</div>
+        <Mainphone.Button_buy
+          key={id}
+          onClick={() => {
+            dispatch(addToOrder(id));
+            dispatch(afterAddOrder(company));
+          }}
+          title="Buy"
+        >
+          {click ? 'In the box' : 'Buy'}
+        </Mainphone.Button_buy>
+      </Mainphone.Main_onephone_block>
+    </>
   );
 };
 export default Main_phone;

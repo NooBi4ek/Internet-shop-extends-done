@@ -1,14 +1,14 @@
 import { Suspense, useState } from 'react';
 import Header from './Header/Header.tsx';
 import React from 'react';
-import Modal from './Modal/Modal.tsx';
 import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 const Main = React.lazy(() => import('./Main/Main.tsx'));
 const OnePhone = React.lazy(() => import('./OnePhone/OnePhone.tsx'));
 const Versus = React.lazy(() => import('./Versus/Versus.tsx'));
 const CheckOut = React.lazy(() => import('./Checkout/CheckOut.tsx'));
-const App = () => {
+const Modal = React.lazy(() => import('./Modal/Modal.tsx'));
+const App = React.memo(function App() {
   const [modal, Setmodal] = useState<boolean>(false);
   const phones = useSelector((state) => state.shop.phones);
   return (
@@ -52,5 +52,5 @@ const App = () => {
       </Routes>
     </>
   );
-};
+});
 export default App;

@@ -1,58 +1,31 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { ModalWindow } from '../styled-dublicate/SDubl';
-export const UpperHeader_Wrapper = styled.div`
+export const Header_Wrapper = styled.div`
   display: flex;
   justify-content: space-around;
-  align-items: center;
-  width: 100vw;
   height: 15vh;
+  width: 100vw;
   background-color: #050402;
-  border-bottom: 2px solid #524336;
-`;
-
-export const UpperHeader_div = styled.div`
+  align-items: center;
   color: #fff;
-  font-weight: 600;
 `;
 
-export const UpperHeader_div_small = styled(UpperHeader_div)`
-  font-size: 18px;
-  letter-spacing: 0.1em;
+export const Header_div = styled.div`
+  color: #fff;
+  font-weight: 400;
 `;
 
-export const UpperHeader_div_normal = styled(UpperHeader_div)`
+export const Header_name_company = styled(Header_div)`
+  font-size: 20px;
+  margin-bottom: 2vh;
+  cursor: pointer;
+`;
+
+export const Header_div_normal = styled(Header_div)`
   font-size: 24px;
 `;
 
-const listanimation = keyframes`
-0%{
-  opacity:0;
-  display:none
-  color:#000;
-}
-100%{
-  opacity:1;
-  display:contents;
-  color:#fff;
-}
-`;
-
-export const UpperHeader_list = styled.li`
-  animation: ${(props) =>
-    props.click
-      ? `${listanimation} 1000ms`
-      : `${listanimation} 1000ms reverse`};
-  transition: 0.3s;
-  list-style: none;
-`;
-
-export const UpperHeader_list_item = styled.ul`
-  color: #fff;
-  font-size: 15px;
-  letter-spacing: 0.1em;
-`;
-
-export const Upper_Header_input = styled.input`
+export const Header_input = styled.input`
   width: 25vw;
   height: 3vh;
   font-size: 24px;
@@ -65,9 +38,19 @@ export const Upper_Header_input = styled.input`
   position: ${(props) => (props.searchModal ? 'fixed' : 'absolute')};
   margin-left: 2vw;
 `;
-export const Upper_Header_button = styled.button``;
+export const Header_button = styled.button`
+  background-color: #050402;
+  color: #fff;
+  border: none;
+  font-size: 1vh 2vw;
+  transition: 0.3s ease-in-out;
+  border: none;
+  &:hover {
+    color: gold;
+  }
+`;
 
-export const SearchWrapper = styled(ModalWindow)`
+export const ModalSearchWrapper = styled(ModalWindow)`
   opacity: ${(props) => (props.searchModal ? '1' : '0')};
   pointer-events: ${(props) => (props.searchModal ? 'all' : 'none')};
 `;
