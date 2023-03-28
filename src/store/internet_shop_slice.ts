@@ -1,6 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IPhones } from '../models/modelPhone';
 
+const Orders =
+  localStorage.getItem('Orders') !== null
+    ? JSON.parse(localStorage.getItem('Orders'))
+    : [];
+
+const Filter_phone =
+  localStorage.getItem('Filter_phone') !== null
+    ? JSON.parse(localStorage.getItem('Filter_phone'))
+    : [];
+
 type Categories = {
   id: number;
   namecat: string;
@@ -16,6 +26,7 @@ type ShopState = {
   sum: number;
   maxPrice: number;
   maxThreads: number;
+  nameCategory: string;
 };
 const initialState: ShopState = {
   phones: [
@@ -219,13 +230,14 @@ const initialState: ShopState = {
     { id: 4, namecat: 'Infinix' },
   ],
   All_category: false,
-  orders: [],
-  filter_phone: [],
+  orders: Orders,
+  filter_phone: Filter_phone,
   versus_Phone: [],
   filterSearch: [],
   sum: 0,
   maxPrice: 0,
   maxThreads: 0,
+  nameCategory: '',
 };
 
 const shopSlice = createSlice({
@@ -242,6 +254,7 @@ const shopSlice = createSlice({
           phones.company === action.payload && state.filter_phone.push(phones);
         });
         state.All_category = false;
+        state.nameCategory = action.payload;
       }
     },
     filterSearchPhone(state, action: PayloadAction<string>) {
@@ -253,13 +266,20 @@ const shopSlice = createSlice({
       });
     },
     startPhone(state): void {
-      state.filter_phone = [];
-      state.phones.forEach((el) => state.filter_phone.push(el));
+      if (localStorage.getItem('Filter_phone') === null) {
+        state.filter_phone = [];
+        state.phones.forEach((el) => state.filter_phone.push(el));
+        localStorage.setItem(
+          'Filter_phone',
+          JSON.stringify(state.filter_phone),
+        );
+      }
+      localStorage.getItem('Filter_phone');
       state.All_category = true;
     },
     addToOrder(state, action: PayloadAction<number>): void {
       let isArr = false;
-      state.orders.forEach((el) => {
+      state.orders.map((el) => {
         if (el.id === action.payload) {
           el.count = el.count + 1;
           isArr = true;
@@ -270,10 +290,20 @@ const shopSlice = createSlice({
         state.phones.some(
           (phone) => phone.id === action.payload && state.orders.push(phone),
         );
-        state.filter_phone = state.phones.map((el) =>
-          el.id === action.payload ? { ...el, click: (el.click = true) } : el,
+        const filter = JSON.parse(localStorage.getItem('Filter_phone'));
+        state.phones = filter;
+        state.filter_phone = state.phones.map((phone) =>
+          phone.id === action.payload
+            ? { ...phone, click: (phone.click = true) }
+            : phone,
+        );
+
+        localStorage.setItem(
+          'Filter_phone',
+          JSON.stringify(state.filter_phone),
         );
       }
+      localStorage.setItem('Orders', JSON.stringify(state.orders));
     },
     afterAddOrder(state, action: PayloadAction<string>): void {
       if (!state.All_category) {
@@ -288,35 +318,35 @@ const shopSlice = createSlice({
         state.phones.forEach((el) => state.filter_phone.push(el));
       }
     },
-    //Подумать над этим методом
-    deleteOrder(state, action): void {
-      if (action.payload.orders.count > 1) {
-        state.orders = state.orders.map((el) =>
-          el.id === action.payload.orders.id
-            ? { ...el, count: el.count - 1 }
-            : el,
+    MinusCountOrder(state, action: PayloadAction<number>): void {
+      state.orders = state.orders.map((el) =>
+        el.id === action.payload ? { ...el, count: el.count - 1 } : el,
+      );
+      localStorage.setItem('Orders', JSON.stringify(state.orders));
+    },
+    filterOrderDeleteClick(state, action: PayloadAction<number>): void {
+      const filter = JSON.parse(localStorage.getItem('Filter_phone'));
+      state.phones = filter;
+      state.filter_phone = state.phones.map((el) =>
+        el.id === action.payload ? { ...el, click: (el.click = false) } : el,
+      );
+      localStorage.setItem('Filter_phone', JSON.stringify(state.filter_phone));
+    },
+    filterAfterDeleteOrder(state): void {
+      if (state.All_category !== true) {
+        state.filter_phone = [];
+        state.phones.forEach(
+          (el) =>
+            el.company === state.nameCategory && state.filter_phone.push(el),
         );
       } else {
-        state.filter_phone = state.phones.map((el) =>
-          el.id === action.payload.orders.id
-            ? { ...el, click: (el.click = false) }
-            : el,
-        );
-        if (state.All_category !== true) {
-          state.filter_phone = [];
-          state.phones.filter((el) =>
-            el.company === action.payload.orders.company
-              ? state.filter_phone.push(el)
-              : el,
-          );
-        } else {
-          state.filter_phone = [];
-          state.phones.forEach((el) => state.filter_phone.push(el));
-        }
-        state.orders = state.orders.filter(
-          (el) => el.id !== action.payload.orders.id,
-        );
+        state.filter_phone = [];
+        state.phones.forEach((el) => state.filter_phone.push(el));
       }
+    },
+    deleteOrder(state, action: PayloadAction<number>): void {
+      state.orders = state.orders.filter((el) => el.id !== action.payload);
+      localStorage.setItem('Orders', JSON.stringify(state.orders));
     },
     addToVersus(state, action: PayloadAction<number>): void {
       let isArr = false;
@@ -352,6 +382,7 @@ const shopSlice = createSlice({
       state.orders = state.orders.map((el) =>
         el.id === action.payload ? { ...el, count: el.count + 1 } : el,
       );
+      localStorage.setItem('Orders', JSON.stringify(state.orders));
     },
     versusMaxPrice(state) {
       state.versus_Phone.length > 0 &&
@@ -390,5 +421,8 @@ export const {
   versusMaxPrice,
   versusMaxThreads,
   countSum,
+  filterAfterDeleteOrder,
+  filterOrderDeleteClick,
+  MinusCountOrder,
 } = shopSlice.actions;
 export default shopSlice.reducer;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks.ts';
 import * as Checkout_Buy from '../styled/styled-checkout/SCheckOut';
 
 const CheckOut_Buy_Form: React.FC = () => {
-  const orders = useSelector((state) => state.shop.orders);
-  const sum = useSelector((state) => state.shop.sum);
+  const orders = useAppSelector((state) => state.shop.orders);
+  const sum = useAppSelector((state) => state.shop.sum);
   return (
     <>
       {orders.length > 0 && (

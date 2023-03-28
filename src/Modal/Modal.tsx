@@ -5,7 +5,7 @@ import * as Modal from '../styled/styled-modal/SModal';
 import ModalBusket from './ModalBusket/ModalBusket.tsx';
 interface IModalWindow {
   modal: boolean;
-  Setmodal: boolean;
+  Setmodal(): boolean;
 }
 const ModalWindow: React.FC<IModalWindow> = React.memo(function ModalWindow({
   modal,
@@ -14,7 +14,7 @@ const ModalWindow: React.FC<IModalWindow> = React.memo(function ModalWindow({
   const orders = useAppSelector((state) => state.shop.orders);
   const navigate = useNavigate();
   let sum = 0;
-  orders.forEach((el) => {
+  orders.map((el) => {
     sum += el.count * el.price;
   });
   return (

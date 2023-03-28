@@ -1,19 +1,23 @@
 import React from 'react';
 import { useAppSelector } from '../store/hooks.ts';
 import { Category } from '../models/modelCategory';
-import { Main_Wrapper } from '../styled/styled-main/SMain';
-import Button_Main from './Button_Main.tsx';
+import * as Main_category from '../styled/styled-main/SMain';
 import Main_phones from './Main_phones.tsx';
+const Button_Main = React.lazy(() => import('./Button_Main.tsx'));
 const Main: React.FC = () => {
   const categories = useAppSelector((state) => state.shop.categories);
   return (
     <>
       {categories.map((el: Category) => (
-        <Button_Main key={el.id} {...el} />
+        <Button_Main
+          key={el.id}
+          {...el}
+          suspens={<div>Loading button category...</div>}
+        />
       ))}
-      <Main_Wrapper>
+      <Main_category.Wrapper>
         <Main_phones />
-      </Main_Wrapper>
+      </Main_category.Wrapper>
     </>
   );
 };

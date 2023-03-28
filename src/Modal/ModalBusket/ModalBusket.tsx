@@ -1,7 +1,13 @@
 import React from 'react';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { IPhones } from '../../models/modelPhone';
-import { addcount, deleteOrder } from '../../store/internet_shop_slice.ts';
+import {
+  addcount,
+  deleteOrder,
+  filterAfterDeleteOrder,
+  filterOrderDeleteClick,
+  MinusCountOrder,
+} from '../../store/internet_shop_slice.ts';
 import * as Modalbusket from '../../styled/styled-busket/SBusket';
 interface ModalBusket {
   orders: IPhones;
@@ -25,7 +31,13 @@ const ModalBusket: React.FC<ModalBusket> = ({ orders, id }) => {
         </Modalbusket.Basket_button>
         <Modalbusket.Basket_button
           onClick={() => {
-            dispatch(deleteOrder({ orders }));
+            if (orders.count > 1) {
+              dispatch(MinusCountOrder(id));
+            } else {
+              dispatch(deleteOrder(id));
+              dispatch(filterOrderDeleteClick(id));
+              dispatch(filterAfterDeleteOrder());
+            }
           }}
         >
           Delete count

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks.ts';
 import * as Mainphone from '../styled/styled-mainphone/SMainphone';
@@ -22,6 +22,7 @@ const Main_phone: React.FC<MainPhone> = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   return (
     <>
       <Mainphone.Main_onephone_block>
