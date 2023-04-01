@@ -10,7 +10,7 @@ const CheckOut = React.lazy(() => import('./Checkout/CheckOut.tsx'));
 const Modal = React.lazy(() => import('./Modal/Modal.tsx'));
 const App = React.memo(function App() {
   const [modal, Setmodal] = useState<boolean>(false);
-  const phones = useSelector((state) => state.shop.phones);
+  const phones = useSelector((state) => state.shop.filter_phone);
   return (
     <>
       {console.log('render app')}

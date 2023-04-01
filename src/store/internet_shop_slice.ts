@@ -11,6 +11,11 @@ const Filter_phone =
     ? JSON.parse(localStorage.getItem('Filter_phone'))
     : [];
 
+const Versus =
+  localStorage.getItem('Versus_phone') !== null
+    ? JSON.parse(localStorage.getItem('Versus_phone'))
+    : [];
+
 type Categories = {
   id: number;
   namecat: string;
@@ -232,7 +237,7 @@ const initialState: ShopState = {
   All_category: false,
   orders: Orders,
   filter_phone: Filter_phone,
-  versus_Phone: [],
+  versus_Phone: Versus,
   filterSearch: [],
   sum: 0,
   maxPrice: 0,
@@ -246,6 +251,8 @@ const shopSlice = createSlice({
   reducers: {
     filterCategories(state, action: PayloadAction<string>): void {
       state.filter_phone = [];
+      const filter = JSON.parse(localStorage.getItem('Filter_phone'));
+      state.phones = filter;
       if (action.payload === 'All') {
         state.phones.forEach((el: IPhones) => state.filter_phone.push(el));
         state.All_category = true;
@@ -356,27 +363,40 @@ const shopSlice = createSlice({
         }
       });
       if (!isArr) {
-        state.phones.some(
+        state.phones.filter(
           (phone) =>
             phone.id === action.payload && state.versus_Phone.push(phone),
         );
+        const filter = JSON.parse(localStorage.getItem('Filter_phone'));
+        state.phones = filter;
         state.filter_phone = state.phones.map((el) =>
           el.id === action.payload
             ? { ...el, click_versus: (el.click_versus = true) }
             : el,
         );
-        console.log(state.versus_Phone);
+        localStorage.setItem(
+          'Versus_phone',
+          JSON.stringify(state.versus_Phone),
+        );
+        localStorage.setItem(
+          'Filter_phone',
+          JSON.stringify(state.filter_phone),
+        );
       }
     },
     DeleteInVersus(state, action: PayloadAction<number>): void {
       state.versus_Phone = state.versus_Phone.filter(
         (el) => el.id !== action.payload,
       );
-      state.phones = state.phones.map((el) =>
+      localStorage.setItem('Versus_phone', JSON.stringify(state.versus_Phone));
+      const filter = JSON.parse(localStorage.getItem('Filter_phone'));
+      state.phones = filter;
+      state.filter_phone = state.phones.map((el) =>
         el.id === action.payload
           ? { ...el, click_versus: (el.click_versus = false) }
           : el,
       );
+      localStorage.setItem('Filter_phone', JSON.stringify(state.filter_phone));
     },
     addcount(state, action: PayloadAction<number>) {
       state.orders = state.orders.map((el) =>
